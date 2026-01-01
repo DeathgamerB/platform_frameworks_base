@@ -34,7 +34,7 @@ public class AswRestrictMemoryDynCodeLoading extends AppSwitch {
         return set.contains(pkg);
     }
 
-    @Override
+@Override
 public Boolean getImmutableValue(Context ctx, int userId, ApplicationInfo appInfo,
                                  GosPackageState ps, StateInfo si) {
     if (appInfo.isSystemApp()) {
@@ -51,7 +51,7 @@ public Boolean getImmutableValue(Context ctx, int userId, ApplicationInfo appInf
     return null;
 }
 
-    @Override
+@Override
 protected boolean getDefaultValueInner(Context ctx, int userId, ApplicationInfo appInfo,
                                        GosPackageState ps, StateInfo si) {
     if (appInfo.isSystemApp()) {
