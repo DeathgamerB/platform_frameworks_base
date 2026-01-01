@@ -35,36 +35,30 @@ public class AswRestrictMemoryDynCodeLoading extends AppSwitch {
     }
 
     @Override
-    public Boolean getImmutableValue(Context ctx, int userId, ApplicationInfo appInfo,
-                                     GosPackageState ps, StateInfo si) {
-        if (appInfo.isSystemApp()) {
-            if (shouldAllowByDefaultToSystemPkg(ctx, appInfo.packageName)) {
-                // allow manual restriction
-                return null;
-            }
-            if (SELinuxFlags.isSystemAppSepolicyWeakeningAllowed()) {
-                return null;
-            }
-            si.immutabilityReason = IR_IS_SYSTEM_APP;
-            return true;
-        }
-
-        if (ps.hasFlag(GosPackageStateFlag.ENABLE_EXPLOIT_PROTECTION_COMPAT_MODE)) {
-            si.immutabilityReason = IR_EXPLOIT_PROTECTION_COMPAT_MODE;
-            return false;
-        }
-
-        return null;
+public Boolean getImmutableValue(Context ctx, int userId, ApplicationInfo appInfo,
+                                 GosPackageState ps, StateInfo si) {
+    if (appInfo.isSystemApp()) {
+        // Force the restriction to be OFF (false) for all system apps
+        // This ensures they can always use DCL.
+        return null; 
     }
+
+    if (ps.hasFlag(GosPackageStateFlag.ENABLE_EXPLOIT_PROTECTION_COMPAT_MODE)) {
+        si.immutabilityReason = IR_EXPLOIT_PROTECTION_COMPAT_MODE;
+        return false;
+    }
+
+    return null;
+}
 
     @Override
-    protected boolean getDefaultValueInner(Context ctx, int userId, ApplicationInfo appInfo,
-                                           GosPackageState ps, StateInfo si) {
-        if (appInfo.isSystemApp()) {
-            return !shouldAllowByDefaultToSystemPkg(ctx, appInfo.packageName);
-        } else {
-            si.defaultValueReason = DVR_DEFAULT_SETTING;
-            return ExtSettings.RESTRICT_MEMORY_DYN_CODE_LOADING_BY_DEFAULT.get(ctx, userId);
-        }
+protected boolean getDefaultValueInner(Context ctx, int userId, ApplicationInfo appInfo,
+                                       GosPackageState ps, StateInfo si) {
+    if (appInfo.isSystemApp()) {
+        return true;
+    } else {
+        si.defaultValueReason = DVR_DEFAULT_SETTING;
+        return ExtSettings.RESTRICT_MEMORY_DYN_CODE_LOADING_BY_DEFAULT.get(ctx, userId);
     }
+  }
 }
