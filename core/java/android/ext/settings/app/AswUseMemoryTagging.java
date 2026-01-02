@@ -28,7 +28,7 @@ public class AswUseMemoryTagging extends AppSwitch {
         final String primaryAbi = appInfo.primaryCpuAbi;
         if (primaryAbi == null) {
             si.immutabilityReason = IR_NO_NATIVE_CODE;
-            return true;
+            return null;
         }
 
         if (!VMRuntime.is64BitAbi(primaryAbi)) {
@@ -42,13 +42,13 @@ public class AswUseMemoryTagging extends AppSwitch {
                     return false;
             }
             si.immutabilityReason = IR_IS_SYSTEM_APP;
-            return true;
+            return null;
         }
 
         int mm = appInfo.getMemtagMode();
         if (mm == ApplicationInfo.MEMTAG_ASYNC || mm == ApplicationInfo.MEMTAG_SYNC) {
             si.immutabilityReason = IR_OPTED_IN_VIA_MANIFEST;
-            return true;
+            return null;
         }
 
         if (ps.hasFlag(GosPackageStateFlag.ENABLE_EXPLOIT_PROTECTION_COMPAT_MODE)) {
