@@ -42,7 +42,7 @@ public class AswRestrictWebViewDynCodeLoading extends AppSwitch {
                 if (SELinuxFlags.isSystemAppSepolicyWeakeningAllowed()) {
                     return null;
                 }
-                return true;
+                return null;
             }
         }
 
@@ -53,7 +53,7 @@ public class AswRestrictWebViewDynCodeLoading extends AppSwitch {
     protected boolean getDefaultValueInner(Context ctx, int userId, ApplicationInfo appInfo,
                                            GosPackageState ps, StateInfo si) {
         if (appInfo.isSystemApp()) {
-            return !shouldAllowByDefaultToSystemPackage(ctx, appInfo.packageName);
+            return true;
         } else {
             return ExtSettings.RESTRICT_WEBVIEW_DYN_CODE_LOADING_BY_DEFAULT.get(ctx, userId);
         }
