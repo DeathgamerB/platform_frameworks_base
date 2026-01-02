@@ -46,10 +46,10 @@ public class AswRestrictStorageDynCodeLoading extends AppSwitch {
                 return null;
             }
             if (SELinuxFlags.isSystemAppSepolicyWeakeningAllowed()) {
-                return null;
+                return false;
             }
             si.immutabilityReason = IR_IS_SYSTEM_APP;
-            return true;
+            return null;
         }
 
         if (ps.hasFlag(GosPackageStateFlag.ENABLE_EXPLOIT_PROTECTION_COMPAT_MODE)) {
@@ -74,7 +74,7 @@ public class AswRestrictStorageDynCodeLoading extends AppSwitch {
     protected boolean getDefaultValueInner(Context ctx, int userId, ApplicationInfo appInfo,
                                            GosPackageState ps, StateInfo si) {
         if (appInfo.isSystemApp()) {
-            return !shouldAllowByDefaultToSystemPkg(ctx, appInfo.packageName);
+            return true;
         } else {
             if (appInfo.ext().hasFlag(AppInfoExtFlag.HAS_GMSCORE_CLIENT_LIBRARY)) {
                 if (isGmsCoreInstalled(ctx, userId)) {
