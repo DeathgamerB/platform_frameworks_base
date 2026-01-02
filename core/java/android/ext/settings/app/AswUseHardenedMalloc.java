@@ -25,7 +25,7 @@ public class AswUseHardenedMalloc extends AppSwitch {
         String primaryAbi = appInfo.primaryCpuAbi;
         if (primaryAbi == null) {
             si.immutabilityReason = IR_NO_NATIVE_CODE;
-            return true;
+            return null;
         }
 
         if (!VMRuntime.is64BitAbi(primaryAbi)) {
@@ -38,12 +38,12 @@ public class AswUseHardenedMalloc extends AppSwitch {
             // turning off hardened_malloc requires exec spawning, which is always disabled for
             // debuggable apps
             si.immutabilityReason = IR_IS_DEBUGGABLE_APP;
-            return true;
+            return null;
         }
 
         if (appInfo.isSystemApp()) {
             si.immutabilityReason = IR_IS_SYSTEM_APP;
-            return true;
+            return null;
         }
 
         if (ps.hasFlag(GosPackageStateFlag.ENABLE_EXPLOIT_PROTECTION_COMPAT_MODE)) {
